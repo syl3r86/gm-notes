@@ -1,0 +1,12 @@
+.gm-notes .editor {
+    position:sticky;
+    overflow:auto;
+    /*height:calc (100% - 40px);*/
+    height:90%;
+}
+
+.gm-notes button {
+    height: 34px;
+    width: 48%;
+    margin-bottom: 6px;
+}

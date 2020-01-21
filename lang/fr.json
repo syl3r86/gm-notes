@@ -1,0 +1,7 @@
+{
+    "GMNote.label":"Notes du Mj",
+    "GMNote.setting":"Afficher l'intégralité de la Note du Mj",
+    "GMNote.settingHint":"Si vous cochez cette case, seule l'icône apparaîtra.",
+    "GMNote.moveToDescription":"Déplacer les Notes du MJ vers Description",
+    "GMNote.moveToNote":"Déplacer depuis Description vers les Notes du MJ"
+}

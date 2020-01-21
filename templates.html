@@ -1,0 +1,11 @@
+<form class="editable">
+    {{#if isGM}}    
+        {{#if showExtraButtons}}
+            <div class="controlls">
+                <button class="moveToNote">{{localize "GMNote.moveToNote"}}</button>
+                <button class="moveToDescription">{{localize "GMNote.moveToDescription"}}</button>
+            </div>
+        {{/if}}
+        {{editor content=flags.gm-notes.notes target="flags.gm-notes.notes" button=true owner=owner editable=true}}
+    {{/if}}    
+</form>
