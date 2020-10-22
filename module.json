@@ -8,22 +8,27 @@
 	"styles": ["./gm-notes.css"],
     "url": "https://github.com/syl3r86/gm-notes",
     "manifest": "https://raw.githubusercontent.com/syl3r86/gm-notes/master/module.json",
-    "download": "https://github.com/syl3r86/gm-notes/archive/master.zip",
+    "download": "https://github.com/syl3r86/gm-notes/archive/v0.2.zip",
     "languages": [
+        {
+          "lang": "de",
+          "name": "German",
+          "path": "lang/de.json"
+        },
         {
           "lang": "en",
           "name": "English",
           "path": "lang/en.json"
         },
         {
-          "lang": "ja",
-          "name": "Japanese",
-          "path": "lang/ja.json"
-        },
-        {
           "lang": "fr",
           "name": "French (FRANCE)",
           "path": "lang/fr.json"
+        },
+        {
+          "lang": "ja",
+          "name": "Japanese",
+          "path": "lang/ja.json"
         }
     ],
     "minimumCoreVersion": "0.5.5",
