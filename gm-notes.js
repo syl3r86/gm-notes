@@ -61,7 +61,8 @@ class GMNote extends FormApplication {
             if (game.settings.get('gm-notes', 'showLabel')) {
                 labelTxt = ' ' + title;
             }
-            let openBtn = $(`<a class="open-gm-note" title="${title}"><i class="fas fa-clipboard"></i>${labelTxt}</a>`);
+            let notes = app.entity.getFlag('gm-notes', 'notes');
+            let openBtn = $(`<a class="open-gm-note" title="${title}"><i class="fas fa-clipboard${notes ? '-check':''}"></i>${labelTxt}</a>`);
             openBtn.click(ev => {
                 let noteApp = null;
                 for (let key in app.entity.apps) {
