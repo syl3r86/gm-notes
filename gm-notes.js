@@ -63,6 +63,9 @@ class GMNote extends FormApplication {
             }
             let notes = app.entity.getFlag('gm-notes', 'notes');
             let openBtn = $(`<a class="open-gm-note" title="${title}"><i class="fas fa-clipboard${notes ? '-check':''}"></i>${labelTxt}</a>`);
+            if (game.settings.get("gm-notes", 'makeColoured') === true) {
+                openBtn = $(`<a class="open-gm-note" title="${title}"><i class="fas fa-clipboard${notes ? '-check" style="color:red"':''}"></i>${labelTxt}</a>`);
+            }
             openBtn.click(ev => {
                 let noteApp = null;
                 for (let key in app.entity.apps) {
@@ -134,6 +137,14 @@ Hooks.on('init', () => {
         scope: "world",
         config: true,
         default: true,
+        type: Boolean
+    });
+    game.settings.register("gm-notes", 'makeColoured', {
+        name: game.i18n.localize('GMNote.makeColoured'),
+        hint: game.i18n.localize('GMNote.makeColouredHint'),
+        scope: "world",
+        config: true,
+        default: false,
         type: Boolean
     });
 });
