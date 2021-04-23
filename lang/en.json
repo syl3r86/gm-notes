@@ -3,5 +3,7 @@
     "GMNote.setting":"Show full GM Note Label",
     "GMNote.settingHint":"If checked only the icon will apear.",
     "GMNote.moveToDescription":"Move GM Notes to Description",
-    "GMNote.moveToNote":"Move Description to GM Notes"
+    "GMNote.moveToNote":"Move Description to GM Notes",
+    "GMNote.makeColoured":"Mark button red",
+    "GMNote.makeColouredHint":"If checked the icon will be red when GM Notes are present."
 }
