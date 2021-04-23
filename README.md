@@ -1,4 +1,5 @@
 This is a fork of GM Notes from @syl3r86. All credits go to him. I just added an option to make the button red when GM Notes are present. Given that he declined my Pull Request, anyone interested can get the files here. Just replace [gm-notes.js](https://github.com/SalieriC/gm-notes/blob/master/gm-notes.js) and [/lang/en.json](https://github.com/SalieriC/gm-notes/blob/master/lang/en.json).  
+Original description below:  
 
 # GM Notes
 
