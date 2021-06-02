@@ -57,12 +57,19 @@ class GMNote extends FormApplication {
     static _initEntityHook(app, html, data) {
         if (game.user.isGM) {
             let labelTxt = '';
+            let labelStyle= "";
             let title = game.i18n.localize('GMNote.label'); 
-            if (game.settings.get('gm-notes', 'showLabel')) {
+            let notes = app.entity.getFlag('gm-notes', 'notes');
+
+
+            if (game.settings.get('gm-notes', 'hideLabel') !== false) {
                 labelTxt = ' ' + title;
             }
-            let notes = app.entity.getFlag('gm-notes', 'notes');
-            let openBtn = $(`<a class="open-gm-note" title="${title}"><i class="fas fa-clipboard${notes ? '-check':''}"></i>${labelTxt}</a>`);
+            if (game.settings.get('gm-notes', 'colorLabel') === true && notes) {
+                labelStyle = "style='color:green;'";
+            }
+
+            let openBtn = $(`<a class="open-gm-note" title="${title}" ${labelStyle} ><i class="fas fa-clipboard${notes ? '-check':''}"></i>${labelTxt}</a>`);
             openBtn.click(ev => {
                 let noteApp = null;
                 for (let key in app.entity.apps) {
@@ -128,12 +135,19 @@ class GMNote extends FormApplication {
     }
 }
 Hooks.on('init', () => {
-    game.settings.register("gm-notes", 'showLabel', {
+    game.settings.register("gm-notes", 'hideLabel', {
         name: game.i18n.localize('GMNote.setting'),
         hint: game.i18n.localize('GMNote.settingHint'),
         scope: "world",
         config: true,
-        default: true,
+        default: false,
+        type: Boolean
+    });
+    game.settings.register("gm-notes", 'colorLabel', {
+        name: game.i18n.localize('GMNote.colorSetting'),
+        scope: "world",
+        config: true,
+        default: false,
         type: Boolean
     });
 });

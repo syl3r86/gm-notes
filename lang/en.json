@@ -1,7 +1,8 @@
 {
     "GMNote.label":"GM Notes",
-    "GMNote.setting":"Show full GM Note Label",
+    "GMNote.setting":"Hide GM Note Label",
     "GMNote.settingHint":"If checked only the icon will apear.",
+    "GMNote.colorSetting":"Change Color when Notes are present",
     "GMNote.moveToDescription":"Move GM Notes to Description",
     "GMNote.moveToNote":"Move Description to GM Notes"
 }
