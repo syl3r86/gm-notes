@@ -2,7 +2,7 @@
 	"name": "gm-notes",
 	"title": "GM Notes",
 	"description": "Adds the option to create Notes for Actors, Items and JournalEntrys only accessible to GMs",
-	"version": "0.4",
+	"version": "0.4.1",
 	"author": "Felix#6196",
 	"scripts": ["./gm-notes.js"],
 	"styles": ["./gm-notes.css"],
@@ -19,6 +19,11 @@
           "lang": "ja",
           "name": "Japanese",
           "path": "lang/ja.json"
+        },
+        {
+          "lang": "de",
+          "name": "German",
+          "path": "lang/de.json"
         },
         {
           "lang": "fr",

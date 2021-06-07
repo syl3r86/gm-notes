@@ -62,7 +62,7 @@ class GMNote extends FormApplication {
             let notes = app.entity.getFlag('gm-notes', 'notes');
 
 
-            if (game.settings.get('gm-notes', 'hideLabel') !== false) {
+            if (game.settings.get('gm-notes', 'hideLabel') === false) {
                 labelTxt = ' ' + title;
             }
             if (game.settings.get('gm-notes', 'colorLabel') === true && notes) {

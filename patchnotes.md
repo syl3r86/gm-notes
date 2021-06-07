@@ -1,3 +1,8 @@
+v0.4.1
+ - fixed error in the logic to hide the label
+ - fixed french translation
+ - added german translation
+
 v0.4
   - added option to color label if notes are present
 
