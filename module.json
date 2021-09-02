@@ -29,6 +29,11 @@
           "lang": "fr",
           "name": "French (FRANCE)",
           "path": "lang/fr.json"
+        },
+        {
+          "lang": "pl",
+          "name": "Polski",
+          "path": "lang/pl.json"
         }
     ],
     "minimumCoreVersion": "0.5.5",
