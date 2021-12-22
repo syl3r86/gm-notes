@@ -1,166 +1,169 @@
 class GMNote extends FormApplication {
 
-    constructor(object, options) {
-        super(object, options);
+	constructor(object, options) {
+		super(object, options);
 
-        this.entity.apps[this.appId] = this;
-    }
+		if (!this.object.apps)
+			this.document.apps = {};
+		this.document.apps[this.appId] = this;
+	}
 
-    get entity() {
-        return this.object;
-    }
+	get document() {
+		return this.object;
+	}
 
-    get showExtraButtons() {
-        return (game.dnd5e && this.entity.constructor.name !== 'RollTable');
-    }
+	get showExtraButtons() {
+		return (game.dnd5e && this.document.constructor.name !== 'RollTable');
+	}
 
-    static get defaultOptions() {
-        const options = super.defaultOptions;
-        options.template = "modules/gm-notes/templates.html";
-        options.width = '600';
-        options.height = '700';
-        options.classes = ['gm-notes', 'sheet'];
-        options.title = game.i18n.localize('GMNote.label');
-        options.resizable = true;
-        options.editable = true;
-        return options;
-    }
+	static get defaultOptions() {
+		const options = super.defaultOptions;
+		options.template = "modules/gm-notes/templates.html";
+		options.width = '600';
+		options.height = '700';
+		options.classes = ['gm-notes', 'sheet'];
+		options.title = game.i18n.localize('GMNote.label');
+		options.resizable = true;
+		options.editable = true;
+		return options;
+	}
 
-    getData() {
-        const data = super.getData();
-
-        data.notes = this.entity.getFlag('gm-notes', 'notes');
-        data.flags = this.entity.data.flags;
-        data.owner = game.user.id;
-        data.isGM = game.user.isGM;
-        data.showExtraButtons = this.showExtraButtons;
-
-        return data;
-    }
-
-    activateListeners(html) {
-        super.activateListeners(html);
-
-        html.find('.moveToNote').click(ev => this._moveToNotes());
-        html.find('.moveToDescription').click(ev => this._moveToDescription());
-    }
-    
-    async _updateObject(event, formData) {
-        if (game.user.isGM) {
-            await this.entity.setFlag('gm-notes', 'notes', formData["flags.gm-notes.notes"]);
-            this.render();
-        } else {
-            ui.notifications.error("You have to be GM to edit GM Notes.");
-        }
-    }
-
-    static _initEntityHook(app, html, data) {
-        if (game.user.isGM) {
-            let labelTxt = '';
-            let labelStyle= "";
-            let title = game.i18n.localize('GMNote.label'); 
-            let notes = app.entity.getFlag('gm-notes', 'notes');
+	getData() {
+		const data = super.getData();
 
 
-            if (game.settings.get('gm-notes', 'hideLabel') === false) {
-                labelTxt = ' ' + title;
-            }
-            if (game.settings.get('gm-notes', 'colorLabel') === true && notes) {
-                labelStyle = "style='color:green;'";
-            }
+		data.notes = this.document.getFlag('gm-notes', 'notes');
+		data.flags = this.document.data.flags;
+		data.owner = game.user.id;
+		data.isGM = game.user.isGM;
+		data.showExtraButtons = this.showExtraButtons;
 
-            let openBtn = $(`<a class="open-gm-note" title="${title}" ${labelStyle} ><i class="fas fa-clipboard${notes ? '-check':''}"></i>${labelTxt}</a>`);
-            openBtn.click(ev => {
-                let noteApp = null;
-                for (let key in app.entity.apps) {
-                    let obj = app.entity.apps[key];
-                    if (obj instanceof GMNote) {
-                        noteApp = obj;
-                        break;
-                    }
-                }
-                if (!noteApp) noteApp = new GMNote(app.entity, { submitOnClose: true, closeOnSubmit: false, submitOnUnfocus: true });
-                noteApp.render(true);
-            });
-            html.closest('.app').find('.open-gm-note').remove();
-            let titleElement = html.closest('.app').find('.window-title');
-            openBtn.insertAfter(titleElement);
-        }
-    }
-    
-    async _moveToNotes() {
-        if (game.dnd5e) {
-            let descPath = '';
-            switch (this.entity.constructor.name) {
-                case 'Actor5e': descPath = 'data.details.biography.value'; break;
-                case 'Item5e': descPath = 'data.description.value'; break;
-                case 'JournalEntry': descPath = 'content'; break;
-            }
-            let description = getProperty(this.entity, 'data.'+descPath);
-            let notes = getProperty(this.entity, 'data.flags.gm-notes.notes');
+		return data;
+	}
 
-            if (notes === undefined) notes = '';
-            if (description === undefined) description = '';
+	activateListeners(html) {
+		super.activateListeners(html);
 
-            let obj = {};
-            obj[descPath] = '';
-            obj['flags.gm-notes.notes'] = notes + description;
+		html.find('.moveToNote').click(ev => this._moveToNotes());
+		html.find('.moveToDescription').click(ev => this._moveToDescription());
+	}
 
-            await this.entity.update(obj);
-            this.render();
-        }
-    }
+	async _updateObject(event, formData) {
+		if (game.user.isGM) {
+			await this.document.setFlag('gm-notes', 'notes', formData["flags.gm-notes.notes"]);
+			this.render();
+		} else {
+			ui.notifications.error("You have to be GM to edit GM Notes.");
+		}
+	}
 
-    async _moveToDescription() {
-        if (game.dnd5e) {
-            let descPath = '';
-            switch (this.entity.constructor.name) {
-                case 'Actor5e': descPath = 'data.details.biography.value'; break;
-                case 'Item5e': descPath = 'data.description.value'; break;
-                case 'JournalEntry': descPath = 'content'; break;
-            }
-            let description = getProperty(this.entity, 'data.' + descPath);
-            let notes = getProperty(this.entity, 'data.flags.gm-notes.notes');
+	static _initEntityHook(app, html, data) {
+		if (game.user.isGM) {
+			let labelTxt = '';
+			let labelStyle= "";
+			let title = game.i18n.localize('GMNote.label'); 
+			let notes = app.document.getFlag('gm-notes', 'notes');
 
-            if (notes === undefined) notes = '';
-            if (description === undefined) description = '';
 
-            let obj = {};
-            obj[descPath] = description + notes;
-            obj['flags.gm-notes.notes'] = '';
+			if (game.settings.get('gm-notes', 'hideLabel') === false) {
+				labelTxt = ' ' + title;
+			}
+			if (game.settings.get('gm-notes', 'colorLabel') === true && notes) {
+				labelStyle = "style='color:green;'";
+			}
 
-            await this.entity.update(obj);
-            this.render();
-        }
-    }
+			let openBtn = $(`<a class="open-gm-note" title="${title}" ${labelStyle} ><i class="fas fa-clipboard${notes ? '-check':''}"></i>${labelTxt}</a>`);
+			openBtn.click(ev => {
+				let noteApp = null;
+				for (let key in app.document.apps) {
+					let obj = app.document.apps[key];
+					if (obj instanceof GMNote) {
+						noteApp = obj;
+						break;
+					}
+				}
+				if (!noteApp) noteApp = new GMNote(app.document, { submitOnClose: true, closeOnSubmit: false, submitOnUnfocus: true });
+				noteApp.render(true);
+			});
+			html.closest('.app').find('.open-gm-note').remove();
+			let titleElement = html.closest('.app').find('.window-title');
+			openBtn.insertAfter(titleElement);
+		}
+	}
+
+	async _moveToNotes() {
+		if (game.dnd5e) {
+			let descPath = '';
+			switch (this.document.constructor.name) {
+				case 'Actor5e': descPath = 'data.details.biography.value'; break;
+				case 'Item5e': descPath = 'data.description.value'; break;
+				case 'JournalEntry': descPath = 'content'; break;
+			}
+			let description = getProperty(this.document, 'data.'+descPath);
+			let notes = getProperty(this.document, 'data.flags.gm-notes.notes');
+
+			if (notes === undefined) notes = '';
+			if (description === undefined) description = '';
+
+			let obj = {};
+			obj[descPath] = '';
+			obj['flags.gm-notes.notes'] = notes + description;
+
+			await this.document.update(obj);
+			this.render();
+		}
+	}
+
+	async _moveToDescription() {
+		if (game.dnd5e) {
+			let descPath = '';
+			switch (this.document.constructor.name) {
+				case 'Actor5e': descPath = 'data.details.biography.value'; break;
+				case 'Item5e': descPath = 'data.description.value'; break;
+				case 'JournalEntry': descPath = 'content'; break;
+			}
+			let description = getProperty(this.document, 'data.' + descPath);
+			let notes = getProperty(this.document, 'data.flags.gm-notes.notes');
+
+			if (notes === undefined) notes = '';
+			if (description === undefined) description = '';
+
+			let obj = {};
+			obj[descPath] = description + notes;
+			obj['flags.gm-notes.notes'] = '';
+
+			await this.document.update(obj);
+			this.render();
+		}
+	}
 }
 Hooks.on('init', () => {
-    game.settings.register("gm-notes", 'hideLabel', {
-        name: game.i18n.localize('GMNote.setting'),
-        hint: game.i18n.localize('GMNote.settingHint'),
-        scope: "world",
-        config: true,
-        default: false,
-        type: Boolean
-    });
-    game.settings.register("gm-notes", 'colorLabel', {
-        name: game.i18n.localize('GMNote.colorSetting'),
-        scope: "world",
-        config: true,
-        default: false,
-        type: Boolean
-    });
+	game.settings.register("gm-notes", 'hideLabel', {
+		name: game.i18n.localize('GMNote.setting'),
+		hint: game.i18n.localize('GMNote.settingHint'),
+		scope: "world",
+		config: true,
+		default: false,
+		type: Boolean
+	});
+	game.settings.register("gm-notes", 'colorLabel', {
+		name: game.i18n.localize('GMNote.colorSetting'),
+		scope: "world",
+		config: true,
+		default: false,
+		type: Boolean
+	});
 });
 
 Hooks.on('renderActorSheet', (app, html, data) => {
-    GMNote._initEntityHook(app, html, data);
+	GMNote._initEntityHook(app, html, data);
 });
 Hooks.on('renderItemSheet', (app, html, data) => {
-    GMNote._initEntityHook(app, html, data);
+	GMNote._initEntityHook(app, html, data);
 });
 Hooks.on('renderJournalSheet', (app, html, data) => {
-    GMNote._initEntityHook(app, html, data);
+	GMNote._initEntityHook(app, html, data);
 });
 Hooks.on('renderRollTableConfig', (app, html, data) => {
-    GMNote._initEntityHook(app, html, data);
+	GMNote._initEntityHook(app, html, data);
 });
