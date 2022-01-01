@@ -1,3 +1,7 @@
+
+v0.5.0
+ - fixed compability with Foundry version 9
+
 v0.4.1
  - fixed error in the logic to hide the label
  - fixed french translation

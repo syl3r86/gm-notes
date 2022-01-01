@@ -59,7 +59,7 @@ class GMNote extends FormApplication {
             let labelTxt = '';
             let labelStyle= "";
             let title = game.i18n.localize('GMNote.label'); 
-            let notes = app.entity.getFlag('gm-notes', 'notes');
+            let notes = app.document.getFlag('gm-notes', 'notes');
 
 
             if (game.settings.get('gm-notes', 'hideLabel') === false) {
@@ -72,14 +72,14 @@ class GMNote extends FormApplication {
             let openBtn = $(`<a class="open-gm-note" title="${title}" ${labelStyle} ><i class="fas fa-clipboard${notes ? '-check':''}"></i>${labelTxt}</a>`);
             openBtn.click(ev => {
                 let noteApp = null;
-                for (let key in app.entity.apps) {
-                    let obj = app.entity.apps[key];
+                for (let key in app.document.apps) {
+                    let obj = app.document.apps[key];
                     if (obj instanceof GMNote) {
                         noteApp = obj;
                         break;
                     }
                 }
-                if (!noteApp) noteApp = new GMNote(app.entity, { submitOnClose: true, closeOnSubmit: false, submitOnUnfocus: true });
+                if (!noteApp) noteApp = new GMNote(app.document, { submitOnClose: true, closeOnSubmit: false, submitOnUnfocus: true });
                 noteApp.render(true);
             });
             html.closest('.app').find('.open-gm-note').remove();
