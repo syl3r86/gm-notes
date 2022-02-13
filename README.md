@@ -1,3 +1,6 @@
+# About this fork
+I am not the author of this module. This is just a quick test to make it work on Foundry v. 9.249
+
 # GM Notes
 
 A Foundry VTT Module to add GM-Only notes to entities (Actor, Items (including owned items), RollTable and JournalEntry).

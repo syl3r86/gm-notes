@@ -2,7 +2,7 @@ class GMNote extends FormApplication {
 
     constructor(object, options) {
         super(object, options);
-
+	    this.document = object;
         this.entity.apps[this.appId] = this;
     }
 
@@ -11,7 +11,7 @@ class GMNote extends FormApplication {
     }
 
     get showExtraButtons() {
-        return (game.dnd5e && this.entity.constructor.name !== 'RollTable');
+        return (game.dnd5e && this.document.constructor.name !== 'RollTable');
     }
 
     static get defaultOptions() {
@@ -47,7 +47,7 @@ class GMNote extends FormApplication {
     
     async _updateObject(event, formData) {
         if (game.user.isGM) {
-            await this.entity.setFlag('gm-notes', 'notes', formData["flags.gm-notes.notes"]);
+            await this.document.setFlag('gm-notes', 'notes', formData["flags.gm-notes.notes"]);
             this.render();
         } else {
             ui.notifications.error("You have to be GM to edit GM Notes.");
@@ -91,13 +91,13 @@ class GMNote extends FormApplication {
     async _moveToNotes() {
         if (game.dnd5e) {
             let descPath = '';
-            switch (this.entity.constructor.name) {
+            switch (this.document.constructor.name) {
                 case 'Actor5e': descPath = 'data.details.biography.value'; break;
                 case 'Item5e': descPath = 'data.description.value'; break;
                 case 'JournalEntry': descPath = 'content'; break;
             }
-            let description = getProperty(this.entity, 'data.'+descPath);
-            let notes = getProperty(this.entity, 'data.flags.gm-notes.notes');
+            let description = getProperty(this.document, 'data.'+descPath);
+            let notes = getProperty(this.document, 'data.flags.gm-notes.notes');
 
             if (notes === undefined) notes = '';
             if (description === undefined) description = '';
@@ -106,7 +106,7 @@ class GMNote extends FormApplication {
             obj[descPath] = '';
             obj['flags.gm-notes.notes'] = notes + description;
 
-            await this.entity.update(obj);
+            await this.document.update(obj);
             this.render();
         }
     }
@@ -114,13 +114,13 @@ class GMNote extends FormApplication {
     async _moveToDescription() {
         if (game.dnd5e) {
             let descPath = '';
-            switch (this.entity.constructor.name) {
+            switch (this.document.constructor.name) {
                 case 'Actor5e': descPath = 'data.details.biography.value'; break;
                 case 'Item5e': descPath = 'data.description.value'; break;
                 case 'JournalEntry': descPath = 'content'; break;
             }
-            let description = getProperty(this.entity, 'data.' + descPath);
-            let notes = getProperty(this.entity, 'data.flags.gm-notes.notes');
+            let description = getProperty(this.document, 'data.' + descPath);
+            let notes = getProperty(this.document, 'data.flags.gm-notes.notes');
 
             if (notes === undefined) notes = '';
             if (description === undefined) description = '';
@@ -129,7 +129,7 @@ class GMNote extends FormApplication {
             obj[descPath] = description + notes;
             obj['flags.gm-notes.notes'] = '';
 
-            await this.entity.update(obj);
+            await this.document.update(obj);
             this.render();
         }
     }
