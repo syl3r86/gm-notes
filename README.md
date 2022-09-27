@@ -9,7 +9,7 @@ This module is system independent, but has an additional feature to easily move 
 ## Installation
 1. Copy this link and use it in Foundrys Module Manager to install the Module
 
-    > https://raw.githubusercontent.com/syl3r86/gm-notes/master/module.json
+    > https://raw.githubusercontent.com/aikelb/gm-notes/master/module.json
     
 2. Enable the Module in your Worlds Module Settings
 

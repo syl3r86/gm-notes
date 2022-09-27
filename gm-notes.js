@@ -2,7 +2,7 @@ class GMNote extends FormApplication {
 
     constructor(object, options) {
         super(object, options);
-	    this.document = object;
+        this.document = object;
         this.entity.apps[this.appId] = this;
     }
 
@@ -11,7 +11,7 @@ class GMNote extends FormApplication {
     }
 
     get showExtraButtons() {
-        return (game.dnd5e && this.document.constructor.name !== 'RollTable');
+        return (game.dnd5e && this.document.constructor.name !== 'RollTable' && this.document.constructor.name !== 'JournalEntry');
     }
 
     static get defaultOptions() {
@@ -28,9 +28,8 @@ class GMNote extends FormApplication {
 
     getData() {
         const data = super.getData();
-
         data.notes = this.entity.getFlag('gm-notes', 'notes');
-        data.flags = this.entity.data.flags;
+        data.flags = this.entity.flags;
         data.owner = game.user.id;
         data.isGM = game.user.isGM;
         data.showExtraButtons = this.showExtraButtons;
@@ -44,7 +43,7 @@ class GMNote extends FormApplication {
         html.find('.moveToNote').click(ev => this._moveToNotes());
         html.find('.moveToDescription').click(ev => this._moveToDescription());
     }
-    
+
     async _updateObject(event, formData) {
         if (game.user.isGM) {
             await this.document.setFlag('gm-notes', 'notes', formData["flags.gm-notes.notes"]);
@@ -57,8 +56,8 @@ class GMNote extends FormApplication {
     static _initEntityHook(app, html, data) {
         if (game.user.isGM) {
             let labelTxt = '';
-            let labelStyle= "";
-            let title = game.i18n.localize('GMNote.label'); 
+            let labelStyle = "";
+            let title = game.i18n.localize('GMNote.label');
             let notes = app.document.getFlag('gm-notes', 'notes');
 
 
@@ -69,7 +68,7 @@ class GMNote extends FormApplication {
                 labelStyle = "style='color:green;'";
             }
 
-            let openBtn = $(`<a class="open-gm-note" title="${title}" ${labelStyle} ><i class="fas fa-clipboard${notes ? '-check':''}"></i>${labelTxt}</a>`);
+            let openBtn = $(`<a class="open-gm-note" title="${title}" ${labelStyle} ><i class="fas fa-clipboard${notes ? '-check' : ''}"></i>${labelTxt}</a>`);
             openBtn.click(ev => {
                 let noteApp = null;
                 for (let key in app.document.apps) {
@@ -87,26 +86,25 @@ class GMNote extends FormApplication {
             openBtn.insertAfter(titleElement);
         }
     }
-    
+
     async _moveToNotes() {
         if (game.dnd5e) {
             let descPath = '';
             switch (this.document.constructor.name) {
-                case 'Actor5e': descPath = 'data.details.biography.value'; break;
-                case 'Item5e': descPath = 'data.description.value'; break;
-                case 'JournalEntry': descPath = 'content'; break;
+                case 'Actor5e': descPath = 'system.details.biography.value'; break;
+                case 'Item5e': descPath = 'system.description.value'; break;
             }
-            let description = getProperty(this.document, 'data.'+descPath);
-            let notes = getProperty(this.document, 'data.flags.gm-notes.notes');
+
+            let description = getProperty(this.document, descPath);
+            let notes = getProperty(this.document, 'flags.gm-notes.notes');
 
             if (notes === undefined) notes = '';
             if (description === undefined) description = '';
 
-            let obj = {};
-            obj[descPath] = '';
-            obj['flags.gm-notes.notes'] = notes + description;
-
-            await this.document.update(obj);
+            await this.document.updateSource({
+                [descPath]: '',
+                'flags.gm-notes.notes': notes + description
+            });
             this.render();
         }
     }
@@ -115,21 +113,19 @@ class GMNote extends FormApplication {
         if (game.dnd5e) {
             let descPath = '';
             switch (this.document.constructor.name) {
-                case 'Actor5e': descPath = 'data.details.biography.value'; break;
-                case 'Item5e': descPath = 'data.description.value'; break;
-                case 'JournalEntry': descPath = 'content'; break;
+                case 'Actor5e': descPath = 'system.details.biography.value'; break;
+                case 'Item5e': descPath = 'system.description.value'; break;
             }
-            let description = getProperty(this.document, 'data.' + descPath);
-            let notes = getProperty(this.document, 'data.flags.gm-notes.notes');
+            let description = getProperty(this.document, descPath);
+            let notes = getProperty(this.document, 'flags.gm-notes.notes');
 
             if (notes === undefined) notes = '';
             if (description === undefined) description = '';
 
-            let obj = {};
-            obj[descPath] = description + notes;
-            obj['flags.gm-notes.notes'] = '';
-
-            await this.document.update(obj);
+            await this.document.updateSource({
+                [descPath]: description + notes,
+                'flags.gm-notes.notes': ''
+            });
             this.render();
         }
     }
