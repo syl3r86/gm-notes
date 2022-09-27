@@ -1,5 +1,8 @@
+v0.5.2
+ - quick fix to make it work on v.10.286
+
 v0.5.1
-- quick fix to make it work on v.9.249
+ - quick fix to make it work on v.9.249
 
 v0.5.0
  - fixed compability with Foundry version 9
