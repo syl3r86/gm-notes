@@ -1,5 +1,5 @@
 # About this fork
-I am not the author of this module. This is just a quick test to make it work on Foundry v. 9.249
+I am not the author of this module. This is just a quick test to make it work on later Foundry versions.
 
 # GM Notes
 
