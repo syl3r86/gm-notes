@@ -2,16 +2,11 @@ class GMNote extends FormApplication {
 
     constructor(object, options) {
         super(object, options);
-
-        this.entity.apps[this.appId] = this;
-    }
-
-    get entity() {
-        return this.object;
+        this.object.apps[this.appId] = this;
     }
 
     get showExtraButtons() {
-        return (game.dnd5e && this.entity.constructor.name !== 'RollTable');
+        return (game.dnd5e && this.object.constructor.name !== 'RollTable' || this.object.constructor.name === "JournalEntry");
     }
 
     static get defaultOptions() {
@@ -26,16 +21,36 @@ class GMNote extends FormApplication {
         return options;
     }
 
-    getData() {
+    async getData() {
         const data = super.getData();
 
-        data.notes = this.entity.getFlag('gm-notes', 'notes');
-        data.flags = this.entity.data.flags;
+        // Current page is on another event loop - wait for 50 millis solves it in majority of circumstances
+        await this.sleep(50);
+        let page = this.getCurrentPage();
+
+        data.journalNotes = await TextEditor.enrichHTML(this.object.getFlag('gm-notes', 'notes'), { async:true});
+
+        data.flags = this.object.flags;
         data.owner = game.user.id;
         data.isGM = game.user.isGM;
-        data.showExtraButtons = this.showExtraButtons;
+        data.showExtraButtons = this.showExtraButtons && page != null;
 
         return data;
+    }
+
+    getCurrentPage()
+    {
+        // Find current page
+        let pageIdentifier = $(this.object.sheet.pagesInView[0]).data("pageId");
+
+        if(pageIdentifier) {
+            return this.object.pages.get(pageIdentifier);
+        }
+        return null;
+    }
+
+    async sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
     }
 
     activateListeners(html) {
@@ -47,7 +62,7 @@ class GMNote extends FormApplication {
     
     async _updateObject(event, formData) {
         if (game.user.isGM) {
-            await this.entity.setFlag('gm-notes', 'notes', formData["flags.gm-notes.notes"]);
+            await this.object.setFlag('gm-notes', 'notes', formData["flags.gm-notes.notes"]);
             this.render();
         } else {
             ui.notifications.error("You have to be GM to edit GM Notes.");
@@ -59,7 +74,7 @@ class GMNote extends FormApplication {
             let labelTxt = '';
             let labelStyle= "";
             let title = game.i18n.localize('GMNote.label'); 
-            let notes = app.document.getFlag('gm-notes', 'notes');
+            let notes = app.object.getFlag('gm-notes', 'notes');
 
 
             if (game.settings.get('gm-notes', 'hideLabel') === false) {
@@ -72,8 +87,8 @@ class GMNote extends FormApplication {
             let openBtn = $(`<a class="open-gm-note" title="${title}" ${labelStyle} ><i class="fas fa-clipboard${notes ? '-check':''}"></i>${labelTxt}</a>`);
             openBtn.click(ev => {
                 let noteApp = null;
-                for (let key in app.document.apps) {
-                    let obj = app.document.apps[key];
+                for (let key in app.object.apps) {
+                    let obj = app.object.apps[key];
                     if (obj instanceof GMNote) {
                         noteApp = obj;
                         break;
@@ -89,48 +104,71 @@ class GMNote extends FormApplication {
     }
     
     async _moveToNotes() {
-        if (game.dnd5e) {
+        if (game.dnd5e && this.object.constructor.name !== 'JournalEntry') {
             let descPath = '';
-            switch (this.entity.constructor.name) {
-                case 'Actor5e': descPath = 'data.details.biography.value'; break;
-                case 'Item5e': descPath = 'data.description.value'; break;
-                case 'JournalEntry': descPath = 'content'; break;
+            switch (this.object.constructor.name) {
+                case 'Actor5e': descPath = 'system.details.biography.value'; break;
+                case 'Item5e': descPath = 'system.description.value'; break;
             }
-            let description = getProperty(this.entity, 'data.'+descPath);
-            let notes = getProperty(this.entity, 'data.flags.gm-notes.notes');
+            let description = getProperty(this.object, descPath);
+            let notes = getProperty(this.object, 'flags.gm-notes.notes');
 
             if (notes === undefined) notes = '';
             if (description === undefined) description = '';
 
             let obj = {};
-            obj[descPath] = '';
-            obj['flags.gm-notes.notes'] = notes + description;
+            obj[descPath] = '';            
+            await this.object.setFlag('gm-notes', 'notes' ,notes + description);
+            await this.object.update(obj);
+            // No longeer required - the update will re-render
+            // this.render();
+        } else if(this.object.constructor.name === 'JournalEntry') {
 
-            await this.entity.update(obj);
-            this.render();
+            let page = this.getCurrentPage();
+            if(!page) { 
+                // I no current page - don't do things
+                return;
+            }
+            
+            let notes = this.object.getFlag('gm-notes', 'notes') ?? '';
+            let description = getProperty(page, 'text.content') ?? '';
+            // Here can just move text
+            let obj = {};
+            obj["text.content"] = '';
+            await this.object.setFlag('gm-notes', 'notes' ,notes + description);
+            await page.update(obj);
         }
     }
 
     async _moveToDescription() {
-        if (game.dnd5e) {
+        if (game.dnd5e && this.object.constructor.name !== 'JournalEntry') {
             let descPath = '';
-            switch (this.entity.constructor.name) {
-                case 'Actor5e': descPath = 'data.details.biography.value'; break;
-                case 'Item5e': descPath = 'data.description.value'; break;
-                case 'JournalEntry': descPath = 'content'; break;
+            switch (this.object.constructor.name) {
+                case 'Actor5e': descPath = 'system.details.biography.value'; break;
+                case 'Item5e': descPath = 'system.description.value'; break;
             }
-            let description = getProperty(this.entity, 'data.' + descPath);
-            let notes = getProperty(this.entity, 'data.flags.gm-notes.notes');
+            let description = getProperty(this.object, descPath);
+            let notes = this.object.getFlag('gm-notes','notes');
 
             if (notes === undefined) notes = '';
             if (description === undefined) description = '';
 
             let obj = {};
             obj[descPath] = description + notes;
-            obj['flags.gm-notes.notes'] = '';
+            await this.object.setFlag('gm-notes','notes','');       
+            await this.object.update(obj);  // this will re-render
+        } else if(this.object.constructor.name === 'JournalEntry') {
+            let page = this.getCurrentPage();
+            if(!page) {
+                return;
+            }
+            let notes = getProperty(this.object, 'flags.gm-notes.notes') ?? '';
+            let description = getProperty(page, 'text.content') ?? '';
 
-            await this.entity.update(obj);
-            this.render();
+            let obj = {};            
+            obj["text.content"] = description + notes;            
+            await this.object.setFlag('gm-notes','notes','');
+            await page.update(obj);
         }
     }
 }

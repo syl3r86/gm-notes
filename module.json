@@ -1,9 +1,21 @@
 {
 	"name": "gm-notes",
+  "id": "gm-notes",
 	"title": "GM Notes",
 	"description": "Adds the option to create Notes for Actors, Items and JournalEntrys only accessible to GMs",
-	"version": "0.5.0",
-	"author": "Felix#6196",
+	"version": "0.6.0",
+  "authors": [
+    {
+      "name": "Felix#6196"
+    }
+  ],
+  "minimumCoreVersion": 10,
+  "compatibleCoreVersion": 10,
+  "compatibility": {
+    "minimum": 10,
+    "verified": 10,
+    "maximum": 10
+  },
 	"scripts": ["./gm-notes.js"],
 	"styles": ["./gm-notes.css"],
     "url": "https://github.com/syl3r86/gm-notes",
@@ -30,7 +42,5 @@
           "name": "French (FRANCE)",
           "path": "lang/fr.json"
         }
-    ],
-    "minimumCoreVersion": "0.5.5",
-    "compatibleCoreVersion": "9.238"
+    ]
 }
