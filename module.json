@@ -25,29 +25,30 @@
   },
 	"scripts": ["./gm-notes.js"],
 	"styles": ["./gm-notes.css"],
-    "url": "https://github.com/syl3r86/gm-notes",
-    "manifest": "https://raw.githubusercontent.com/syl3r86/gm-notes/master/module.json",
-    "download": "https://github.com/syl3r86/gm-notes/archive/master.zip",
-    "languages": [
-        {
-          "lang": "en",
-          "name": "English",
-          "path": "lang/en.json"
-        },
-        {
-          "lang": "ja",
-          "name": "Japanese",
-          "path": "lang/ja.json"
-        },
-        {
-          "lang": "de",
-          "name": "German",
-          "path": "lang/de.json"
-        },
-        {
-          "lang": "fr",
-          "name": "French (FRANCE)",
-          "path": "lang/fr.json"
-        }
-    ]
+  "languages": [
+      {
+        "lang": "en",
+        "name": "English",
+        "path": "lang/en.json"
+      },
+      {
+        "lang": "ja",
+        "name": "Japanese",
+        "path": "lang/ja.json"
+      },
+      {
+        "lang": "de",
+        "name": "German",
+        "path": "lang/de.json"
+      },
+      {
+        "lang": "fr",
+        "name": "French (FRANCE)",
+        "path": "lang/fr.json"
+      }
+  ],
+  "url": "This is auto replaced",
+  "manifest": "This is auto replaced",
+  "download": "This is auto replaced"
+
 }
