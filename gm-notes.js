@@ -24,9 +24,14 @@ class GMNote extends FormApplication {
     async getData() {
         const data = super.getData();
 
-        // Current page is on another event loop - wait for 50 millis solves it in majority of circumstances
-        await this.sleep(50);
-        let page = this.getCurrentPage();
+    
+        let page = null;
+        if(this.object.constructor.name === 'JournalEntry') 
+        {
+            // Current page is on another event loop - wait for 50 millis solves it in majority of circumstances
+            await this.sleep(50);
+            page = this.getCurrentPage();
+        }
 
         data.journalNotes = await TextEditor.enrichHTML(this.object.getFlag('gm-notes', 'notes'), { async:true});
 
@@ -40,6 +45,9 @@ class GMNote extends FormApplication {
 
     getCurrentPage()
     {
+        if(this.object.constructor.name === 'JournalEntry') { 
+            return null;
+        }
         // Find current page
         let pageIdentifier = $(this.object.sheet.pagesInView[0]).data("pageId");
 
