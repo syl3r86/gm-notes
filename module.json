@@ -6,8 +6,15 @@
 	"version": "0.6.0",
   "authors": [
     {
-      "name": "Felix#6196"
+      "name": "Felix#6196",
+      "comment": "Original Author"
+    },
+    {
+      "name": "Bithir",
+      "email": "bithir@gmail.com",
+      "website": "https://bithir.co.uk/",
     }
+
   ],
   "minimumCoreVersion": 10,
   "compatibleCoreVersion": 10,
