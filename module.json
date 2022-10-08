@@ -47,8 +47,8 @@
         "path": "lang/fr.json"
       }
   ],
-  "url": "This is auto replaced",
-  "manifest": "This is auto replaced",
-  "download": "This is auto replaced"
+  "url": "https://github.com/syl3r86/gm-notes",
+  "manifest": "https://raw.githubusercontent.com/syl3r86/gm-notes/master/module.json",
+  "download": "https://github.com/syl3r86/gm-notes/archive/master.zip"
 
 }
