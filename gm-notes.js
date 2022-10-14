@@ -29,12 +29,12 @@ class GMNote extends FormApplication {
         if(this.object.constructor.name === 'JournalEntry') 
         {
             // Current page is on another event loop - wait for 50 millis solves it in majority of circumstances
-            await this.sleep(50);
+            await this.sleep(100);
             page = this.getCurrentPage();
         }
 
-        data.journalNotes = await TextEditor.enrichHTML(this.object.getFlag('gm-notes', 'notes'), { async:true});
 
+        data.journalNotes = await TextEditor.enrichHTML(this.object.getFlag('gm-notes', 'notes'), { async:true});
         data.flags = this.object.flags;
         data.owner = game.user.id;
         data.isGM = game.user.isGM;
@@ -45,7 +45,7 @@ class GMNote extends FormApplication {
 
     getCurrentPage()
     {
-        if(this.object.constructor.name === 'JournalEntry') { 
+        if(this.object.constructor.name !== 'JournalEntry') { 
             return null;
         }
         // Find current page
@@ -69,9 +69,12 @@ class GMNote extends FormApplication {
     }
     
     async _updateObject(event, formData) {
+        if (jQuery.isEmptyObject(formData) ) {
+            return;
+        }
         if (game.user.isGM) {
             await this.object.setFlag('gm-notes', 'notes', formData["flags.gm-notes.notes"]);
-            this.render();
+            // this.render();
         } else {
             ui.notifications.error("You have to be GM to edit GM Notes.");
         }
@@ -180,6 +183,7 @@ class GMNote extends FormApplication {
         }
     }
 }
+
 Hooks.on('init', () => {
     game.settings.register("gm-notes", 'hideLabel', {
         name: game.i18n.localize('GMNote.setting'),
@@ -208,5 +212,14 @@ Hooks.on('renderJournalSheet', (app, html, data) => {
     GMNote._initEntityHook(app, html, data);
 });
 Hooks.on('renderRollTableConfig', (app, html, data) => {
+    GMNote._initEntityHook(app, html, data);
+});
+Hooks.on('renderTileConfig', (app, html, data) => {
+    GMNote._initEntityHook(app, html, data);
+});
+Hooks.on('renderDrawingConfig', (app, html, data) => {
+    GMNote._initEntityHook(app, html, data);
+});
+Hooks.on('renderAmbientLightConfig', (app, html, data) => {
     GMNote._initEntityHook(app, html, data);
 });
