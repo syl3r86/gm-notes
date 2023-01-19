@@ -1,3 +1,4 @@
+import { sendDevMessage } from './devmessage.js';
 class GMNote extends FormApplication {
 
     constructor(object, options) {
@@ -184,7 +185,7 @@ class GMNote extends FormApplication {
     }
 }
 
-Hooks.on('init', () => {
+Hooks.once('init', () => {
     game.settings.register("gm-notes", 'hideLabel', {
         name: game.i18n.localize('GMNote.setting'),
         hint: game.i18n.localize('GMNote.settingHint'),
@@ -208,6 +209,13 @@ Hooks.on('init', () => {
         default: '0',
     });
 
+});
+
+Hooks.once('ready', async function() {
+    if (game.user.isGM) {
+        sendDevMessage();
+    }
+    console.info(`gm-notes | Module[gm-notes] ready hook complete`);
 });
 
 Hooks.on('renderActorSheet', (app, html, data) => {
