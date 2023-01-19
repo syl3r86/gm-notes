@@ -1,5 +1,18 @@
-v0.6.0
+v7.0
 
+Initial release after shifting module responsibility. Bithir is now the new maintainer.
+Added message system, so that it is possible to notify game owners if there are any particular issues with the current release.
+
+v6.02
+
+Minor fixes plus solution for #25 and [Feature Request] Identifier for items with GM notes.  #29
+
+v6.01
+
+- Yaml changes
+
+v0.6.0
+ - Initial v10 support
 
 v0.5.0
  - fixed compability with Foundry version 9

@@ -200,6 +200,14 @@ Hooks.on('init', () => {
         default: false,
         type: Boolean
     });
+    game.settings.register("gm-notes", 'devMessageVersionNumber', {
+        name: 'Development message version',
+        scope: 'world',
+        config: false,
+        type: String,
+        default: '0',
+    });
+
 });
 
 Hooks.on('renderActorSheet', (app, html, data) => {

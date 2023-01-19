@@ -2,19 +2,18 @@
 	"name": "gm-notes",
   "id": "gm-notes",
 	"title": "GM Notes",
-	"description": "Adds the option to create Notes for Actors, Items and JournalEntrys only accessible to GMs",
-	"version": "0.6.0",
+	"description": "Adds the option to create Notes for Actors, Items, Lights, Tiles, Drawings and JournalEntrys only accessible to GMs",
+	"version": "0.7.0",
   "authors": [
-    {
-      "name": "Felix#6196",
-      "comment": "Original Author"
-    },
     {
       "name": "Bithir",
       "email": "bithir@gmail.com",
       "website": "https://bithir.co.uk/"
+    },    
+    {
+      "name": "Felix#6196",
+      "comment": "Original Author"
     }
-
   ],
   "minimumCoreVersion": 10,
   "compatibleCoreVersion": 10,
@@ -23,7 +22,10 @@
     "verified": 10,
     "maximum": 10
   },
-	"scripts": ["./gm-notes.js"],
+  "esmodules": [
+    "./gm-notes.js"
+  ],
+	"scripts": [],
 	"styles": ["./gm-notes.css"],
   "languages": [
       {
